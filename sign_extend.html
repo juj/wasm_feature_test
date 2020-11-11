@@ -1,0 +1,50 @@
+<html><head><style>pre { background-color: #d0d0d0; } #test { background-color:#a0a0f0; font-weight: bold; }</style></head><body>
+To detect if a Wasm user agent supports the <a href='https://github.com/WebAssembly/sign-extension-ops'>sign extension operations extension</a>, one can try instantiating the following WebAssembly test Module:
+<pre>
+(module
+ (type $0 (func))
+ (func $signext  (type $0)
+  (local $0 i64)
+  (drop (i64.extend8_s (local.get $0)))
+ )
+)
+</pre>
+Compile with <pre>wasm-as sign_extend.wast -o sign_extend.wasm --enable-sign-ext</pre>
+where wasm-as is the WebAssembly assembler tool from <a href='https://github.com/WebAssembly/binaryen'>Binaryen</a> repository.
+
+That command produces the following WebAssembly module bytes:
+<pre>
+0061 736d 0100 0000 0104 0160 0000 0302
+0100 0a0a 0108 0101 7e20 00c2 1a0b
+</pre>
+
+which can be tested in a JS engine with the following code snippet:
+
+<pre>
+try {
+	WebAssembly.instantiate(new Uint8Array([0,97,115,109,1,0,0,0,1,4,1,96,0,0,3,2,1,0,10,10,1,8,1,1,126,32,0,194,26,11])).then(function() {
+		console.log('sign extend instructions: supported');
+	}).catch(function(e) {
+		// Generally prints "CompileError: wasm validation error: at offset 27: unrecognized opcode: c2"
+		console.error('WebAssembly.instantiate failed: ' + e);
+	});
+} catch(e) {
+		// Maybe WebAssembly is not supported at all?
+		console.error('Exception: ' + e);
+}
+</pre>
+Testing:<br>
+<div id='test'></div>
+<script>
+try {
+	WebAssembly.instantiate(new Uint8Array([0,97,115,109,1,0,0,0,1,4,1,96,0,0,3,2,1,0,10,10,1,8,1,1,126,32,0,194,26,11])).then(function() {
+		document.querySelector('#test').innerHTML += 'sign extend instructions: supported';
+	}).catch(function(e) {
+		// Generally prints "CompileError: wasm validation error: at offset 27: unrecognized opcode: c2"
+		document.querySelector('#test').innerHTML += 'WebAssembly.instantiate failed: ' + e.toString();
+	});
+} catch(e) {
+		// Maybe WebAssembly is not supported at all?
+		document.querySelector('#test').innerHTML += 'Exception: ' + e.toString();	
+}
+</script></body></html>
