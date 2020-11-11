@@ -1,0 +1,22 @@
+<html><head><style>pre { background-color: #d0d0d0; } #test { background-color:#a0a0f0; font-weight: bold; }</style></head><body>
+To detect if a Wasm user agent supports 4GB WebAssembly.Memory sizes (instead of the max 2GB that many user agents were limited to), one can run the following JS code snippet:
+<pre>
+try {
+	var memory = new WebAssembly.Memory({initial:2**16});
+	console.log('4gb wasm memory: supported');
+} catch(e) {
+	console.error(e);
+}
+</pre>
+Testing:<br>
+<div id='test'></div>
+<script>
+try {
+	var memory = new WebAssembly.Memory({initial:2**16});
+	document.querySelector('#test').innerHTML += '4gb wasm memory: supported';
+} catch(e) {
+	document.querySelector('#test').innerHTML += e;
+}
+</script>
+</body>
+</html>
