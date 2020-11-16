@@ -19,29 +19,21 @@ which can be tested in a JS engine with the following code snippet:
 
 <pre>
 try {
-	WebAssembly.instantiate(new Uint8Array([0,97,115,109,1,0,0,0,6,9,1,125,1,67,0,0,0,0,11,7,5,1,1,97,3,0])).then(function() {
-		console.log('mutable globals: supported');
-	}).catch(function(e) {
-		// Generally prints "CompileError: wasm validation error: at offset 26: can't import/export mutable globals in the MVP".
-		console.error('WebAssembly.instantiate failed: ' + e);
-	});
+	var mutableGlobalsSupported = WebAssembly.validate(new Uint8Array([0,97,115,109,1,0,0,0,6,9,1,125,1,67,0,0,0,0,11,7,5,1,1,97,3,0]));
+	console.log('mutable globals: ' + (mutableGlobalsSupported ? 'supported' : 'not supported'));
 } catch(e) {
-		// Maybe WebAssembly is not supported at all?
-		console.error('Exception: ' + e);
+	// Maybe WebAssembly is not supported at all?
+	console.error('Exception: ' + e);
 }
 </pre>
 Testing:<br>
 <div id='test'></div>
 <script>
 try {
-	WebAssembly.instantiate(new Uint8Array([0,97,115,109,1,0,0,0,6,9,1,125,1,67,0,0,0,0,11,7,5,1,1,97,3,0])).then(function() {
-		document.querySelector('#test').innerHTML += 'mutable globals: supported';
-	}).catch(function(e) {
-		// Generally prints "CompileError: wasm validation error: at offset 26: can't import/export mutable globals in the MVP".
-		document.querySelector('#test').innerHTML += 'WebAssembly.instantiate failed: ' + e.toString();
-	});
+	var mutableGlobalsSupported = WebAssembly.validate(new Uint8Array([0,97,115,109,1,0,0,0,6,9,1,125,1,67,0,0,0,0,11,7,5,1,1,97,3,0]));
+	document.querySelector('#test').innerHTML += 'mutable globals: ' + (mutableGlobalsSupported ? 'supported' : 'not supported');
 } catch(e) {
-		// Maybe WebAssembly is not supported at all?
-		document.querySelector('#test').innerHTML += 'Exception: ' + e.toString();	
+	// Maybe WebAssembly is not supported at all?
+	document.querySelector('#test').innerHTML += 'Exception: ' + e;
 }
 </script></body></html>

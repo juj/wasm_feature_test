@@ -22,33 +22,21 @@ which can be tested in a JS engine with the following code snippet:
 
 <pre>
 try {
-	WebAssembly.instantiate(new Uint8Array([0,97,115,109,1,0,0,0,1,4,1,96,0,0,3,2,1,0,5,3,1,0,1,10,13,1,11,0,65,0,65,0,65,1,
-		// Opcode 0xfc 0x0b: memory.fill
-		252,11,0,11])).then(function() {
-		console.log('Bulk memory: supported');
-	}).catch(function(e) {
-		// Generally prints "CompileError: wasm validation error: at offset 34: unrecognized opcode: fc 0" if not supported."
-		console.error('WebAssembly.instantiate failed: ' + e);
-	});
+	var bulkMemorySupported = WebAssembly.validate(new Uint8Array([0,97,115,109,1,0,0,0,1,4,1,96,0,0,3,2,1,0,5,3,1,0,1,10,13,1,11,0,65,0,65,0,65,1,252,11,0,11]));
+	console.log('bulk memory: ' + (bulkMemorySupported ? 'supported' : 'not supported'));
 } catch(e) {
-		// Maybe WebAssembly is not supported at all?
-		console.error('Exception: ' + e);
+	// Maybe WebAssembly is not supported at all?
+	console.error('Exception: ' + e);
 }
 </pre>
 Testing:<br>
 <div id='test'></div>
 <script>
 try {
-	WebAssembly.instantiate(new Uint8Array([0,97,115,109,1,0,0,0,1,4,1,96,0,0,3,2,1,0,5,3,1,0,1,10,13,1,11,0,65,0,65,0,65,1,
-		// Opcode 0xfc 0x0b: memory.fill
-		252,11,0,11])).then(function() {
-		document.querySelector('#test').innerHTML += 'bulk memory: supported';
-	}).catch(function(e) {
-		// Generally prints "CompileError: wasm validation error: at offset 34: unrecognized opcode: fc 0" if not supported."
-		document.querySelector('#test').innerHTML += 'WebAssembly.instantiate failed: ' + e.toString();
-	});
+	var bulkMemorySupported = WebAssembly.validate(new Uint8Array([0,97,115,109,1,0,0,0,1,4,1,96,0,0,3,2,1,0,5,3,1,0,1,10,13,1,11,0,65,0,65,0,65,1,252,11,0,11]));
+	document.querySelector('#test').innerHTML += 'bulk memory: ' + (bulkMemorySupported ? 'supported' : 'not supported');
 } catch(e) {
-		// Maybe WebAssembly is not supported at all?
-		document.querySelector('#test').innerHTML += 'Exception: ' + e.toString();	
+	// Maybe WebAssembly is not supported at all?
+	document.querySelector('#test').innerHTML += 'Exception: ' + e;
 }
 </script></body></html>

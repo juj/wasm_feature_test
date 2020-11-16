@@ -1,0 +1,40 @@
+<html><head><style>pre { background-color: #d0d0d0; } #test { background-color:#a0a0f0; font-weight: bold; }</style></head><body>
+To detect if a Wasm user agent supports the <a href='https://github.com/WebAssembly/simd'>WebAssembly SIMD extension</a>, one can try validating the following WebAssembly test Module:
+<pre>
+(module
+ (func $simd
+  (drop (i64x2.splat (i64.const 0)))
+ )
+)
+</pre>
+Compile with <pre>wasm-as simd.wast -o simd.wasm --enable-simd</pre>
+where wasm-as is the WebAssembly assembler tool from <a href='https://github.com/WebAssembly/binaryen'>Binaryen</a> repository.
+
+That command produces the following WebAssembly module bytes:
+<pre>
+0061 736d 0100 0000 0104 0160 0000 0302
+0100 0a09 0107 0042 00fd 0f1a 0b
+</pre>
+
+which can be tested in a JS engine with the following code snippet:
+
+<pre>
+try {
+	var simdSupported = WebAssembly.validate(new Uint8Array([0,97,115,109,1,0,0,0,1,4,1,96,0,0,3,2,1,0,10,9,1,7,0,65,0,253,15,26,11]));
+	console.log('WebAssembly SIMD: ' + (simdSupported ? 'supported' : 'not supported');
+} catch(e) {
+	// Maybe WebAssembly is not supported at all?
+	console.error('Exception: ' + e);
+}
+</pre>
+Testing:<br>
+<div id='test'></div>
+<script>
+try {
+	var simdSupported = WebAssembly.validate(new Uint8Array([0,97,115,109,1,0,0,0,1,4,1,96,0,0,3,2,1,0,10,9,1,7,0,65,0,253,15,26,11]));
+	document.querySelector('#test').innerHTML += 'WebAssembly SIMD: ' + (simdSupported ? 'supported' : 'not supported');
+} catch(e) {
+	// Maybe WebAssembly is not supported at all?
+	document.querySelector('#test').innerHTML += 'Exception: ' + e;
+}
+</script></body></html>
