@@ -19,7 +19,7 @@ All the feature tests operate synchronously.
  - Reference types: TODO
  - SharedArrayBuffer + Atomics: TODO
  - Exceptions: TODO
- - SIMD128: TODO
+ - [simd128](http://clb.confined.space/wasm_feature_detect/simd.html)
  - Tail calls: TODO
  - [4gb wasm memory](http://clb.confined.space/wasm_feature_detect/4gb_wasm_memory.html)
 
