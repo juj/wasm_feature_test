@@ -1,0 +1,48 @@
+<html><head><style>pre { background-color: #d0d0d0; } #test { background-color:#a0a0f0; font-weight: bold; }</style></head><body>
+To detect if a Wasm user agent supports the <a href='https://github.com/WebAssembly/JS-BigInt-integration'>JS BigInt integration</a>, one can try instantiating the following WebAssembly test Module:
+<pre>
+(module
+  (func (export "f") (param i64) (result i64)
+    local.get 0
+  )
+)
+</pre>
+Compile with <pre>wasm-as bigint.wast -o bigint.wasm</pre>
+where wasm-as is the WebAssembly assembler tool from <a href='https://github.com/WebAssembly/binaryen'>Binaryen</a> repository.
+
+That command produces the following WebAssembly module bytes:
+<pre>
+0061 736d 0100 0000 0106 0160 017e 017e
+0302 0100 0705 0101 6600 000a 0601 0400
+2000 0b
+</pre>
+
+which can be tested in a JS engine with the following code snippet:
+
+<pre>
+async function testJsBigIntIntegrationSupported() {
+  return WebAssembly.instantiate(new Uint8Array([0,97,115,109,1,0,0,0,1,6,1,96,1,126,1,126,3,2,1,0,7,5,1,1,102,0,0,10,6,1,4,0,32,0,11]))
+    .then(e => e.instance.exports.f(BigInt(4)) === BigInt(4));
+}
+testJsBigIntIntegrationSupported().then(e => {
+  document.querySelector('#test').innerHTML += 'Wasm JS BigInt integration supported: supported';
+}).catch(e => {
+  document.querySelector('#test').innerHTML += 'Wasm JS BigInt integration supported: not supported: ' + e;
+});
+</pre>
+
+This test unfortunately needs to be asynchronous, as a simple WebAssembly.validate() test will not be able to detect JS BigInt integration support.
+
+<p>Testing:<br>
+<div id='test'></div>
+<script>
+  async function testJsBigIntIntegrationSupported() {
+    return WebAssembly.instantiate(new Uint8Array([0,97,115,109,1,0,0,0,1,6,1,96,1,126,1,126,3,2,1,0,7,5,1,1,102,0,0,10,6,1,4,0,32,0,11]))
+      .then(e => e.instance.exports.f(BigInt(4)) === BigInt(4));
+  }
+  testJsBigIntIntegrationSupported().then(e => {
+    document.querySelector('#test').innerHTML += 'Wasm JS BigInt integration supported: supported';
+  }).catch(e => {
+    document.querySelector('#test').innerHTML += 'Wasm JS BigInt integration supported: not supported: ' + e;
+  });
+</script></body></html>
