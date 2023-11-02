@@ -1,0 +1,41 @@
+<html><head><style>pre { background-color: #d0d0d0; } #test { background-color:#a0a0f0; font-weight: bold; }</style></head><body>
+To detect if a Wasm user agent supports the <a href='https://github.com/WebAssembly/nontrapping-float-to-int-conversions'>nontrapping float-to-int conversions</a>, one can try instantiating the following WebAssembly test Module:
+<pre>
+(module
+ (func $f
+  (local $0 f32)
+  (drop (i32.trunc_sat_f32_s (local.get $0)))
+ )
+)
+</pre>
+Compile with <pre>wasm-as nontrapping_fptoint.wast -o nontrapping_fptoint.wasm --enable-nontrapping-float-to-int</pre>
+where wasm-as is the WebAssembly assembler tool from <a href='https://github.com/WebAssembly/binaryen'>Binaryen</a> repository.
+
+That command produces the following WebAssembly module bytes:
+<pre>
+0061 736d 0100 0000 0104 0160 0000 0302
+0100 0a0b 0109 0101 7d20 00fc 001a 0b
+</pre>
+
+which can be tested in a JS engine with the following code snippet:
+
+<pre>
+try {
+	var nontrappingFptointSupported = WebAssembly.validate(new Uint8Array([0,97,115,109,1,0,0,0,1,4,1,96,0,0,3,2,1,0,10,11,1,9,1,1,125,32,0,252,0,26,11]));
+	console.log('nontrapping fptoint supported: ' + (nontrappingFptointSupported ? 'supported' : 'not supported'));
+} catch(e) {
+	// Maybe WebAssembly is not supported at all?
+	console.error('Exception: ' + e);
+}
+</pre>
+Testing:<br>
+<div id='test'></div>
+<script>
+try {
+	var nontrappingFptointSupported = WebAssembly.validate(new Uint8Array([0,97,115,109,1,0,0,0,1,4,1,96,0,0,3,2,1,0,10,11,1,9,1,1,125,32,0,252,0,26,11]));
+	document.querySelector('#test').innerHTML += 'nontrapping fptoint supported: ' + (nontrappingFptointSupported ? 'supported' : 'not supported');
+} catch(e) {
+	// Maybe WebAssembly is not supported at all?
+	document.querySelector('#test').innerHTML += 'Exception: ' + e;
+}
+</script></body></html>
