@@ -1,4 +1,4 @@
-# wasm_feature_detect
+# wasm_feature_test
 
 This repository contains small JS code snippets that can be used to feature detect different WebAssembly subfeatures:
  - https://webassembly.org/roadmap/
@@ -6,22 +6,22 @@ This repository contains small JS code snippets that can be used to feature dete
 
 This repository is similar to https://github.com/GoogleChromeLabs/wasm-feature-detect, but emphasis based on educating how the tests are performed, minimal code size, and intended to be easily embeddable to external JS code by easily copy-pasting the code (rather than needing to set up a npm ecosystem).
 
-All the feature tests operate synchronously.
+With the exception of BigInt test, which must operate asynchronously, all other feature tests operate synchronously.
 
 ## Run live
 
- - [sign extend](http://clb.confined.space/wasm_feature_detect/sign_extend.html)
- - Nontrapping fp-to-int: TODO
- - [mutable globals](http://clb.confined.space/wasm_feature_detect/mutable_globals.html)
- - [bulk memory](http://clb.confined.space/wasm_feature_detect/bulk_memory.html)
- - BigInt: TODO
+ - [sign extend](sign_extend.html)
+ - [Nontrapping fp-to-int](nontrapping_fptoint.html)
+ - [mutable globals](mutable_globals.html)
+ - [bulk memory](bulk_memory.html)
+ - [BigInt](bigint.html)
  - Multivalue: TODO
  - Reference types: TODO
  - SharedArrayBuffer + Atomics: TODO
- - Exceptions: TODO
- - [simd128](http://clb.confined.space/wasm_feature_detect/simd.html)
+ - [WebAssembly Native Exceptions](wasm_exceptions.html)
+ - [simd128](simd.html)
  - Tail calls: TODO
- - [4gb wasm memory](http://clb.confined.space/wasm_feature_detect/4gb_wasm_memory.html)
+ - [4gb wasm memory](4gb_wasm_memory.html)
 
 ## License
 
